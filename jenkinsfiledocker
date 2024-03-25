@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    environment {     
+    DOCKERHUB_CREDENTIALS= credentials('hari-docker-login')
+    DOCKER_USER= 'jilu407'
+    DOCKER_IMAGE= 'hari-app'
+  }
+    stages {
+        stage('Docker') {
+            steps {
+                sh "sudo docker build -t $DOCKER_USER/$DOCKER_IMAGE:$BUILD_NUMBER ."
+                sh "sudo docker build -t $DOCKER_USER/$DOCKER_IMAGE ."
+            }
+        }
+        stage('Login to Docker Hub') {    
+           steps{                            
+	              sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'                 
+	                   echo 'Login Completed'                
+                }           
+          }
+           stage('Push Image to Docker Hub') {     
+             steps{  
+                 sh 'sudo docker push $DOCKER_USER/$DOCKER_IMAGE:$BUILD_NUMBER' 
+                 sh 'sudo docker push $DOCKER_USER/$DOCKER_IMAGE'
+                  echo 'Push Image Completed'      
+                        }           
+          }  
+           stage('Docker clean') {
+              steps {
+                sh 'sudo docker images -q -f dangling=true | xargs --no-run-if-empty sudo docker rmi'
+                
+              }
+          }
+
+
+      }
+
+        
+    }
