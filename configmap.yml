@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+  namespace: default
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>My HTML Page</title>
+    </head>
+    <body>
+      <h1>i am from configmap-update  </h1>
+    </body>
+    </html>

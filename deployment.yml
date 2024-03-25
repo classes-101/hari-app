@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: rs-hari
+spec:
+  replicas: 5
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nginx
+      env: prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nginx
+        env: prod
+    spec:
+      containers:
+      - name: hari-first
+        image: nginx
+        ports:
+        - containerPort: 80
